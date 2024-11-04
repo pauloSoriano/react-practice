@@ -1,21 +1,22 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import Main from './Main';
 
-test('renders learn react link', () => {
-  render(<Main />);
-  const linkElement = screen.getByText(/Learn React/i);
-  expect(linkElement).toBeInTheDocument();
-});
+describe('Main', () => {
+    it('renders header, footer, and calculator button', () => {
+        render(<Main />);
+        expect(screen.getByText(/Open Calculator/i)).toBeInTheDocument();
+    });
 
-test('renders edit src/App.tsx text', () => {
-  render(<Main />);
-  const editText = screen.getByText(/Edit src\/App.tsx and save to reload./i);
-  expect(editText).toBeInTheDocument();
-});
-
-test('renders logo', () => {
-  render(<Main />);
-  const logoElement = screen.getByAltText(/logo/i);
-  expect(logoElement).toBeInTheDocument();
+    it('updates calculator result', () => {
+        render(<Main />);
+        fireEvent.click(screen.getByText(/Open Calculator/i));
+        fireEvent.click(screen.getByText('1'));
+        fireEvent.click(screen.getByText('+'));
+        fireEvent.click(screen.getByText('2'));
+        fireEvent.click(screen.getByText('='));
+        fireEvent.click(screen.getByLabelText(/Close popup modal/i));
+        expect(screen.getByLabelText(/Calculator Result/i)).toHaveValue('3');
+    });
 });
